@@ -1,6 +1,8 @@
 package com.veryveg.product.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +19,13 @@ public class UserController {
 	@Autowired
 	private UserService uService;
 	
-	@PostMapping("/create")
-	public UserDTO createUser (@RequestBody User u) {
-		return uService.createUserService(u);
-	}
+	 @PostMapping("/create")
+	    public ResponseEntity<Object> createUser(@RequestBody User u) {
+	        try {
+	            UserDTO createdUser = uService.createUserService(u);
+	            return ResponseEntity.ok(createdUser);
+	        } catch (IllegalArgumentException e) {
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+	        }
+	    }
 }
