@@ -18,13 +18,16 @@ public class UserService {
 	@Autowired
 	private UserMapper userMap;
 	
-	public UserDTO createUserService (User u) {
-		Optional<User> finded = userRepo.findById(u.getId());
-		
-		if (finded == null) {
-			User saved = userRepo.save(u);
-			return userMap.toUserDTO(saved);
-		}
-		return null;
+	public UserDTO createUserService(User u) {
+	    Optional<User> finded = userRepo.findByEmail(u.getEmail());
+	    
+	    if (!finded.isPresent()) {
+	        User saved = userRepo.save(u);
+	        System.out.println("User saved: " + saved);
+	        return userMap.toUserDTO(saved);
+	    }
+	    System.out.println("User already exists with email: " + u.getEmail());
+	    return null;
 	}
+
 }
