@@ -2,6 +2,7 @@ package com.veryveg.product.service;
 
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.veryveg.product.entity.Ingredient;
 import com.veryveg.product.entity.Product;
+import com.veryveg.product.repository.IngredientRepository;
 import com.veryveg.product.repository.ProductRepository;
 
 @Service
@@ -17,6 +19,10 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private IngredientRepository ingredientRepository;
+    
+    
     public Iterable<Product> getAllProducts() {
         return productRepository.findAll();
     }
@@ -33,13 +39,41 @@ public class ProductService {
             product.setIngredients(new HashSet<>());
         }
 
-        // Calcola se il prodotto è vegan o vegetariano in base agli ingredienti
-        boolean vegan = true;
-        boolean vegetarian = true;
+        // Se non ci sono ingredienti nel payload, utilizza i dati del prodotto stesso
+        if (product.getIngredients().isEmpty()) {
+            // Calcola vegano e vegetariano basandosi sui dati del prodotto
+            boolean vegan = product.isVegan();
+            boolean vegetarian = product.isVegetarian();
 
-        // Se ci sono ingredienti, calcola vegan e vegetarian
-        if (!product.getIngredients().isEmpty()) {
+            // Imposta i valori vegan e vegetarian nel prodotto
+            product.setVegan(vegan);
+            product.setVegetarian(vegetarian);
+        } else {
+            // Altrimenti, gestisci gli ingredienti come prima
+            Set<Ingredient> savedIngredients = new HashSet<>();
+
             for (Ingredient ingredient : product.getIngredients()) {
+                // Controlla se l'ingrediente è già presente nel database
+                Optional<Ingredient> existingIngredient = ingredientRepository.findByName(ingredient.getName());
+
+                if (existingIngredient.isPresent()) {
+                    // Utilizza l'ingrediente esistente come riferimento
+                    savedIngredients.add(existingIngredient.get());
+                } else {
+                    // Salva l'ingrediente nuovo nel database
+                    Ingredient savedIngredient = ingredientRepository.save(ingredient);
+                    savedIngredients.add(savedIngredient);
+                }
+            }
+
+            // Imposta gli ingredienti salvati nel prodotto
+            product.setIngredients(savedIngredients);
+
+            // Calcola vegano e vegetariano basandosi sugli ingredienti salvati
+            boolean vegan = true;
+            boolean vegetarian = true;
+
+            for (Ingredient ingredient : savedIngredients) {
                 if (!ingredient.isVegan()) {
                     vegan = false;
                 }
@@ -47,11 +81,11 @@ public class ProductService {
                     vegetarian = false;
                 }
             }
-        }
 
-        // Imposta i valori vegan e vegetarian nel prodotto
-        product.setVegan(vegan);
-        product.setVegetarian(vegetarian);
+            // Imposta i valori vegan e vegetarian nel prodotto
+            product.setVegan(vegan);
+            product.setVegetarian(vegetarian);
+        }
 
         // Salva il prodotto nel repository
         productRepository.save(product);
