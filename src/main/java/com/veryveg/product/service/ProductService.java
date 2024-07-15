@@ -99,4 +99,12 @@ public class ProductService {
     public Product getByBarcode(String barcode) {
         return productRepository.findByBarcode(barcode);
     }
+    
+    public Set<Ingredient> getIngredientsByBarcode(String barcode) {
+        Product product = productRepository.findByBarcode(barcode);
+        if (product != null) {
+            return product.getIngredients();
+        }
+        return new HashSet<>();
+    }
 }
