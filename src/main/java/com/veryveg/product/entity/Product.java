@@ -23,7 +23,14 @@ public class Product {
     private boolean vegan;
     private boolean vegetarian;
     private boolean confirmed;
-
+    private boolean verified;
+    
     @DBRef
     private Set<Ingredient> ingredients;
+    
+    @DBRef
+    private Set<Supermercato> supermercato;
+    
+    @DBRef
+	private Set<TipiProdotto> tags;
 }

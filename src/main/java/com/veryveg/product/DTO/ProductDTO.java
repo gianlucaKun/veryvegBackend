@@ -19,7 +19,8 @@ public class ProductDTO {
     private boolean vegan;
     private boolean vegetarian;
     private boolean confirmed;
-
+    private boolean verified;
+    
     private Set<Ingredient> ingredients;
 }
 
