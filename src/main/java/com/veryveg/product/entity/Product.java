@@ -22,6 +22,7 @@ public class Product {
     private String barcode;
     private boolean vegan;
     private boolean vegetarian;
+    private boolean confirmed;
 
     @DBRef
     private Set<Ingredient> ingredients;

@@ -18,6 +18,7 @@ public class ProductDTO {
     private String barcode;
     private boolean vegan;
     private boolean vegetarian;
+    private boolean confirmed;
 
     private Set<Ingredient> ingredients;
 }
