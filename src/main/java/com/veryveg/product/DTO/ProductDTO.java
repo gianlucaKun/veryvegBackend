@@ -1,7 +1,7 @@
 package com.veryveg.product.DTO;
 
 import java.util.Set;
-import com.veryveg.product.entity.Ingredient;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,17 +11,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductDTO {
 
-    private String id;
+	private String id;
 
-    private String name;
-    private String description;
-    private String barcode;
-    private boolean vegan;
-    private boolean vegetarian;
-    private boolean confirmed;
-    private boolean verified;
-    
-    private Set<Ingredient> ingredients;
+	private String name;
+	private String description;
+	private String barcode;
+	private boolean vegan;
+	private boolean vegetarian;
+	private boolean confirmed;
+	private boolean verified;
+
+	private Set<IngredientDTO> ingredients;
+
+	private Set<SupermercatoDTO> supermercati;
+
+	private Set<TipiProdottoDTO> tags;
 }
-
-

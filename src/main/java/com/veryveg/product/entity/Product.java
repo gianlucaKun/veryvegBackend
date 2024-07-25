@@ -29,7 +29,7 @@ public class Product {
     private Set<Ingredient> ingredients;
     
     @DBRef
-    private Set<Supermercato> supermercato;
+    private Set<Supermercato> supermercati;
     
     @DBRef
 	private Set<TipiProdotto> tags;
