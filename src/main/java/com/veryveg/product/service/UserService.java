@@ -29,4 +29,17 @@ public class UserService {
 	        return userMap.toUserDTO(savedUser);
 	    }
 
+	   public boolean loginService (String email, String password) {
+		   
+		   User user = userRepo.findByEmail(email).orElseThrow();
+		   
+		   if (user != null && user.getPassword().equals(password)) {
+			   
+			   return true;
+		   } else {
+			   return false;
+		   }
+		   
+		   
+	   }
 }
